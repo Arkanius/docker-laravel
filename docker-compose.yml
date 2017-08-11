@@ -1,0 +1,90 @@
+version: '2'
+
+services:
+  nginx:
+    build: docker/nginx
+    ports:
+      - 80:80
+    volumes_from:
+      - app
+    networks:
+      - app-network
+    links:
+      - app
+      - php
+      - mysql
+
+  app:
+    command: "true"
+    image: alpine:3.4
+    volumes:
+      - ./:/var/www/app
+    links:
+      - mysql
+    networks:
+      - app-network
+
+  php:
+    build: docker/php
+    expose:
+      - 9000
+    volumes:
+      - ./composer-cache:/composer/cache
+    volumes_from:
+      - app
+    networks:
+      - app-network
+    links:
+      - mysql
+      - redis
+
+  redis:
+    build: docker/redis
+    command: --appendonly yes
+    volumes:
+      - ./redis-data:/data
+    ports:
+      - 6379:6379
+    networks:
+      - app-network
+
+  mysql:
+    build: docker/mysql
+    volumes:
+      - ./db-data:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: core
+      MYSQL_USER: homestead
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: root
+    expose:
+      - 3306
+    ports:
+      - 3306:3306
+    networks:
+      - app-network
+
+  queue:
+    image: php:7.1-alpine
+    command: php artisan queue:work
+    restart: always
+    working_dir: /app
+    volumes:
+      - .:/app
+    networks:
+      - app-network
+    links:
+      - redis
+      - mysql
+      - php
+    depends_on:
+      - mysql
+      - redis
+
+volumes:
+  composer-cache:
+    driver: local
+
+networks:
+  app-network:
+    driver: bridge

@@ -1,0 +1,4 @@
+[mysqld]
+sql-mode=''
+table_definition_cache=50
+performance_schema=0
