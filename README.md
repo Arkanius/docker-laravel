@@ -21,7 +21,6 @@ The follow paths will be created in your project:
 * redis-data
 
   ​
-
 Make sure to ignore its contents in your *.gitignore* file
 
 
