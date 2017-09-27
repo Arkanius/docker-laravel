@@ -28,14 +28,17 @@ Make sure to ignore its contents in your *.gitignore* file
 
 #### Running Commands
 
-To run commands like *composer install*  you should refer the container name with *docker-compose exec* command. I.g: ```docker-compose exec php composer install``` or ```docker-compose exec php composer update``` 
+To run commands like *composer install*  you should refer the container name with *docker-compose exec* command: ```docker-compose exec php composer install``` or ```docker-compose exec php composer update``` 
 
-
-
+#### Running Artisan Commands
+To run artisan commands, you should call php named container with *docker-compose*:
+```docker-compose exec php php artisan migrate```  
+and
+```docker-compose exec php php artisan make:migration migration_name```
 
 #### Running Redis Commands
 
-To run Redis commands, you should follow the same, i.g: ```docker-compose exec redis redis-cli```
+To run Redis commands, you should follow the same: ```docker-compose exec redis redis-cli```
 
 
 
