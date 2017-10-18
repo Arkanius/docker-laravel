@@ -2,7 +2,7 @@ version: '2'
 
 services:
   nginx:
-    build: docker/nginx
+    image: vtrgomes/nginx-alpine:latest
     ports:
       - 80:80
     volumes_from:
@@ -25,7 +25,8 @@ services:
       - app-network
 
   php:
-    build: docker/php
+    image: vtrgomes/php7.1-composer-alpine:latest
+    user: app
     expose:
       - 9000
     volumes:
@@ -39,8 +40,7 @@ services:
       - redis
 
   redis:
-    build: docker/redis
-    command: --appendonly yes
+    image: vtrgomes/redis-alpine:latest
     volumes:
       - ./redis-data:/data
     ports:
@@ -49,7 +49,7 @@ services:
       - app-network
 
   mysql:
-    build: docker/mysql
+    image: vtrgomes/mysql-57:latest
     volumes:
       - ./db-data:/var/lib/mysql
     environment:
@@ -65,10 +65,9 @@ services:
       - app-network
 
   queue:
-    image: php:7.1-alpine
+    image: vtrgomes/php7.1-alpine:latest
     command: php artisan queue:work
     restart: always
-    working_dir: /app
     volumes:
       - .:/app
     networks:
