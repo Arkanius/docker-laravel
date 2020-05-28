@@ -25,7 +25,7 @@ services:
       - app-network
 
   php:
-    image: vtrgomes/php7.1-composer-alpine:latest
+    image: vtrgomes/composer-alpine:7.4
     user: app
     expose:
       - 9000
